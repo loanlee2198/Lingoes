@@ -28,7 +28,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<Word> getWords(String name, String word) {
+    public List<String> getWords(String name, String word) {
         return dictionaryDao.getWords(name, word);
     }
 

@@ -24,7 +24,7 @@ import model.Word;
  */
 public class DictionaryDaoImpl implements DictionaryDao {
 
-    private List<Word> arr=new ArrayList<>();
+    private List<String> arr = new ArrayList<>();
     private final ConnectionManager connection;
 
     public DictionaryDaoImpl() {
@@ -35,29 +35,27 @@ public class DictionaryDaoImpl implements DictionaryDao {
     public Word getWord(String name, String word) {
         Connection conn = connection.getConnection();
         Word resultWord = new Word();
-        List<Word> arr = getWords(name, word);
-//        String sql = "SELECT * FROM `" + name + "` WHERE `word` = '" + word + "'";
-//        Statement statement;
-//        try {
-//            statement = conn.createStatement();
-//            ResultSet result = statement.executeQuery(sql);
-//
-//            if (result.next()) {
-//                result.getInt("id");
-//                result.getString("word");
-//                result.getString("content");
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(DictionaryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        // System.out.println("tu: "+resultWord);
-        return arr.stream()
-                .filter(student -> student.getWord().equals(word))
-                .findFirst().orElse(null);
+        List<String> arr = getWords(name, word);
+        String sql = "SELECT * FROM `" + name + "` WHERE `word` = '" + word + "'";
+        Statement statement;
+        try {
+            statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+
+            if (result.next()) {
+                resultWord.setId(result.getInt("id"));
+                resultWord.setWord(result.getString("word"));
+                resultWord.setContent(result.getString("content"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DictionaryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("tu: " + resultWord);
+        return resultWord;
     }
 
     @Override
-    public List<Word> getWords(String name, String word) {
+    public List<String> getWords(String name, String word) {
         Connection conn = connection.getConnection();
         String sql = "SELECT * FROM `" + name + "` WHERE `word` LIKE '" + word + "%' limit 5";
         Statement statement;
@@ -69,9 +67,7 @@ public class DictionaryDaoImpl implements DictionaryDao {
             ResultSet result = statement.executeQuery(sql);
             // arr.clear();
             while (result.next()) {
-                System.out.println(result.getInt("id") + " " + result.getString("word") + " " + result.getString(3));
-
-                arr.add(new Word(result.getInt("id"), result.getString("word"), result.getString("content")));
+                arr.add(result.getString("word"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DictionaryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,4 +76,5 @@ public class DictionaryDaoImpl implements DictionaryDao {
         return arr;
     }
 
+   
 }

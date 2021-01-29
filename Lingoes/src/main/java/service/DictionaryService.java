@@ -13,7 +13,7 @@ import model.Word;
  * @author ADMIN
  */
 public interface DictionaryService {
-    Word getWord(String name, String word);
+   Word getWord(String name, String word);
 
-    List<Word> getWords(String name, String word);
+    List<String> getWords(String name, String word);
 }
